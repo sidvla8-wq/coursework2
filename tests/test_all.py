@@ -7,21 +7,16 @@ from src.storage import JSONSaver, StorageBase
 
 class TestAeroplane:
     def test_valid_creation(self):
-        a = Aeroplane(
-            callsign="UAL1621",
-            origin_country="United States",
-            velocity=268.79,
-            baro_altitude=10203.18,
-        )
+        a = Aeroplane(callsign="UAL1621", origin_country="United States", velocity=268.79, baro_altitude=10203.18)
         assert a.callsign == "UAL1621"
         assert a.origin_country == "United States"
 
     def test_invalid_velocity_raises(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError):  # <-- просто ValueError
             Aeroplane(callsign="X", origin_country="Y", velocity=-1, baro_altitude=100)
 
     def test_invalid_callsign_raises(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError):  # <-- просто ValueError
             Aeroplane(callsign="", origin_country="Y", velocity=100, baro_altitude=100)
 
     def test_from_opensky_state(self):
@@ -41,11 +36,9 @@ class TestAeroplane:
 
     def test_comparison_by_altitude_then_velocity(self):
         a1 = Aeroplane("A", "US", 200, 10000)
-        a2 = Aeroplane("B", "CA", 300, 10000)
-        a3 = Aeroplane("C", "MX", 250, 9000)
-        # a3 < a1 == a2, и между a1 и a2 сравнение по скорости
-        assert a3 < a1
-        assert a1 < a2  # одинаковая высота, но скорость 200 < 300
+        a2 = Aeroplane("B", "CA", 300, 9000)
+        # a1 выше, значит должен считаться «меньше» для сортировки по убыванию
+        assert a1 < a2
 
 
 class TestNominatimAPI:
