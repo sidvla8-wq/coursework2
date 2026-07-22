@@ -24,6 +24,7 @@ from typing import List
 
 
 def filter_aeroplanes_by_countries(planes: List[Aeroplane], countries: List[str]) -> List[Aeroplane]:
+    """Фильтрует список самолётов по списку стран регистрации"""
     countries_lower = [c.lower() for c in countries]
     return [p for p in planes if (p.origin_country or "").lower() in countries_lower]
 
@@ -54,15 +55,17 @@ def get_aeroplanes_by_altitude(planes: List[Aeroplane], range_str: str) -> List[
 
 
 def sort_aeroplanes_by_altitude_velocity(planes: List[Aeroplane]) -> List[Aeroplane]:
-    # Сортировка по высоте (убывание), затем по скорости (убывание)
+    """Сортирует самолёты: сначала по высоте (убывание), затем по скорости (убывание)"""
     return sorted(planes, key=lambda p: (p.baro_altitude or 0, p.velocity), reverse=True)
 
 
 def get_top_n(planes: List[Aeroplane], n: int) -> List[Aeroplane]:
+    """Возвращает первые N самолётов из списка."""
     return planes[:n]
 
 
 def print_aeroplanes(planes: List[Aeroplane]) -> None:
+    """Выводит таблицу с данными о самолётах в привычном формате"""
     if not planes:
         print("Самолёты не найдены.")
         return
@@ -77,6 +80,10 @@ def print_aeroplanes(planes: List[Aeroplane]) -> None:
 
 
 def user_interaction():
+    """
+        Основная функция взаимодействия с пользователем.
+        Запрашивает страну, получает данные, сохраняет их и предлагает фильтры.
+        """
     api = AeroplanesAPI()
     saver = JSONSaver("aircrafts.json")
 

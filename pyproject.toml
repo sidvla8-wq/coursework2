@@ -1,0 +1,25 @@
+[project]
+name = "coursework2"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "sidvla8-wq",email = "sidvla8@gmail.com"}
+]
+requires-python = "^3.14"
+dependencies = [
+    "pytest (>=9.1.1,<10.0.0)",
+    "pytest-cov (>=7.1.0,<8.0.0)",
+    "requests (>=2.34.2,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "black (>=26.5.1,<27.0.0)",
+    "isort (>=8.0.1,<9.0.0)",
+    "flake8 (>=7.3.0,<8.0.0)"
+]

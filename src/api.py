@@ -4,6 +4,7 @@ from typing import List, Dict, Any, Optional
 
 
 class BaseAPI(ABC):
+    """Абстрактный базовый класс для работы с внешними API"""
     @abstractmethod
     def get_data(self, *args, **kwargs) -> Any:
         """Единый интерфейс для получения данных из API."""
@@ -11,9 +12,11 @@ class BaseAPI(ABC):
 
 
 class NominatimAPI(BaseAPI):
+    """Класс для взаимодействия с API Nominatim (OpenStreetMap) для получения гео-данных."""
     BASE_URL = "https://nominatim.openstreetmap.org/search"
 
     def __init__(self):
+        """Инициализирует сессию запросов и устанавливает обязательный User-Agent."""
         self.session = requests.Session()
         # OpenStreetMap требует корректный User-Agent
         self.session.headers.update({"User-Agent": "Coursework-Aircraft-Tracker/1.0"})
@@ -42,13 +45,16 @@ class NominatimAPI(BaseAPI):
 
     # РЕАЛИЗАЦИЯ АБСТРАКТНОГО МЕТОДА
     def get_data(self, country_name: str, **kwargs) -> Optional[List[float]]:
+        """Реализация абстрактного метода: возвращает boundingbox для страны."""
         return self.get_country_bbox(country_name)
 
 
 class OpenSkyAPI(BaseAPI):
+    """Класс для взаимодействия с API OpenSky Network для получения данных о самолётах."""
     BASE_URL = "https://opensky-network.org/api/states/all"
 
     def __init__(self):
+        """Инициализирует сессию запросов."""
         self.session = requests.Session()
 
     def get_aeroplanes_in_bbox(
@@ -98,6 +104,7 @@ class OpenSkyAPI(BaseAPI):
     def get_data(
         self, south: float, north: float, west: float, east: float, **kwargs
     ) -> List[Dict[str, Any]]:
+        """Реализация абстрактного метода: возвращает список самолётов в прямоугольнике."""
         return self.get_aeroplanes_in_bbox(south, north, west, east)
 
 
@@ -105,10 +112,12 @@ class AeroplanesAPI:
     """Фасад для работы с двумя API: Nominatim + OpenSky."""
 
     def __init__(self):
+        """Инициализирует экземпляры API для Nominatim и OpenSky."""
         self.nominatim = NominatimAPI()
         self.opensky = OpenSkyAPI()
 
     def get_aeroplanes(self, country_name: str) -> List[Dict[str, Any]]:
+        """Основной метод фасада: получает самолёты в воздушном пространстве указанной страны"""
         # Используем абстрактный интерфейс get_data
         bbox = self.nominatim.get_data(country_name)
 
